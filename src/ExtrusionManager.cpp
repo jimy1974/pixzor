@@ -94,7 +94,7 @@ void ExtrusionManager::updateExtrusion(const glm::dvec2& currentMousePos, VoxelW
     double distance = glm::length(deltaMouse);
     const double jumpThreshold = 100.0; // Arbitrary large value threshold
     if (distance > jumpThreshold) {
-        std::cout << "Detected sudden large jump in mouse position. Limiting layer change." << std::endl;
+        //std::cout << "Detected sudden large jump in mouse position. Limiting layer change." << std::endl;
         deltaMouse = glm::dvec2(0.0, 0.0);
         distance = 0.0;
     }
@@ -132,7 +132,7 @@ void ExtrusionManager::updateExtrusion(const glm::dvec2& currentMousePos, VoxelW
     if (glm::length(projectedNormal) > 0.0f) {
         projectedNormal = glm::normalize(projectedNormal);
     } else {
-        std::cout << "Warning: Zero-length normal vector" << std::endl;
+        //std::cout << "Warning: Zero-length normal vector" << std::endl;
     }
 
     // Determine if the mouse movement is in the same direction as the normal
@@ -140,7 +140,7 @@ void ExtrusionManager::updateExtrusion(const glm::dvec2& currentMousePos, VoxelW
 
     // Calculate layers with a minimum threshold to avoid 0 layers due to small movements
     int layers = static_cast<int>((distance + 0.5f) / 10.0f);
-
+    /*
     std::cout << "Current Mouse Position: " << glm::to_string(currentMousePos) << std::endl;
     std::cout << "Initial Mouse Position: " << glm::to_string(initialMousePos) << std::endl;
     std::cout << "Delta Mouse: " << glm::to_string(deltaMouse) << std::endl;
@@ -149,11 +149,11 @@ void ExtrusionManager::updateExtrusion(const glm::dvec2& currentMousePos, VoxelW
     std::cout << "Direction: " << direction << std::endl;
     std::cout << "Layers: " << layers << std::endl;
     std::cout << "Current Layers: " << currentLayers << std::endl;
-
+    */
     if (direction > 0.1) { // Mouse moved in the same direction as the face normal
         if (layers > currentLayers) {
             int layersToAdd = layers - currentLayers;
-            std::cout << "Adding Voxels: " << layersToAdd << " layers" << std::endl;
+            //std::cout << "Adding Voxels: " << layersToAdd << " layers" << std::endl;
             addVoxels(layersToAdd, voxelWorld);
             currentLayers = layers;
         }
@@ -173,25 +173,25 @@ void ExtrusionManager::updateExtrusion(const glm::dvec2& currentMousePos, VoxelW
 
 
 void ExtrusionManager::addVoxels(int layers, VoxelWorld& voxelWorld) {
-    std::cout << "Adding Voxels: " << layers << " layers" << std::endl;
+    //std::cout << "Adding Voxels: " << layers << " layers" << std::endl;
     for (const auto& voxel : selectedVoxels) {
         for (int i = 0; i < layers; ++i) {
             glm::ivec3 newVoxelPos = voxel + glm::ivec3(extrusionNormal * static_cast<float>(currentLayers + 1 + i));
             voxelWorld.setVoxel(newVoxelPos.x, newVoxelPos.y, newVoxelPos.z, 1, "white", "default");
             newVoxels.insert(newVoxelPos);
-            std::cout << "Added voxel at: " << glm::to_string(newVoxelPos) << std::endl;
+            //std::cout << "Added voxel at: " << glm::to_string(newVoxelPos) << std::endl;
         }
     }
 }
 
 void ExtrusionManager::removeVoxels(int layers, VoxelWorld& voxelWorld) {
-    std::cout << "Removing Voxels: " << layers << " layers" << std::endl;
+    //std::cout << "Removing Voxels: " << layers << " layers" << std::endl;
     for (const auto& voxel : selectedVoxels) {
         for (int i = 0; i < layers; ++i) {
             glm::ivec3 voxelToRemove = voxel + glm::ivec3(extrusionNormal * static_cast<float>(currentLayers - 1 - i));
             voxelWorld.removeVoxel(voxelToRemove); // Use the new method to remove the voxel
             newVoxels.erase(voxelToRemove);
-            std::cout << "Removed voxel at: " << glm::to_string(voxelToRemove) << std::endl;
+            //std::cout << "Removed voxel at: " << glm::to_string(voxelToRemove) << std::endl;
         }
     }
 }
@@ -212,7 +212,7 @@ void ExtrusionManager::drawVector(const glm::dvec2& start, const glm::dvec2& end
 
 void ExtrusionManager::endExtrusion(VoxelWorld& voxelWorld) {
     if (extruding) {
-        std::cout << "Extrusion ended." << std::endl;
+        //std::cout << "Extrusion ended." << std::endl;
         extruding = false;
     }
 }

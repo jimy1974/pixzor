@@ -70,4 +70,6 @@ std::vector<glm::ivec3> SelectionManager::getSelectedVoxels() const {
 
 void SelectionManager::clearSelections() {
     selectedVoxels.clear();
+    highlightedVoxels.clear();
 }
+

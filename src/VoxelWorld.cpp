@@ -384,9 +384,10 @@ void VoxelWorld::clearSelections(ExtrusionManager& extrusionManager) {
         pair.second.selected = false;
         pair.second.highlighted = false;
     }
-    extrusionManager.clearSelectedVoxels(); // Clear extrusion manager's selected voxels
+    extrusionManager.clearSelectedVoxels();
     generateMeshData();
 }
+
 
 
 

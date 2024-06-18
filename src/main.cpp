@@ -292,6 +292,7 @@ glm::vec3 getRayFromMouse(const glm::mat4& projection, const glm::mat4& view, do
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static bool isLeftMousePressed = false;
+    static bool isDragging = false;
     static glm::dvec2 initialMousePos;
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
@@ -305,8 +306,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
         firstMouse = true;
     }
 
+    bool shiftPressed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         if (!isLeftMousePressed) {
+            isLeftMousePressed = true;
+            initialMousePos = glm::dvec2(xpos, ypos);
+            isDragging = false;
+
             glm::vec3 rayOrigin = camera.position;
             glm::vec3 rayDirection = getRayFromMouse(projection, view, xpos, ypos, windowWidth, windowHeight);
             glm::ivec3 hitVoxel;
@@ -318,25 +325,64 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
                 std::cout << "Hit voxel face: " << hitFace << std::endl;
 
                 if (voxelWorld.isVoxelSelected(hitVoxel)) {
-                    initialMousePos = glm::dvec2(xpos, ypos);
                     std::vector<glm::ivec3> selectedVoxels = selectionManager.getSelectedVoxels();
                     std::unordered_set<glm::ivec3> selectedVoxelSet(selectedVoxels.begin(), selectedVoxels.end());
                     extrusionManager.setSelectedVoxels(selectedVoxelSet);
                     extrusionManager.startExtrusion(hitVoxel, hitNormal, hitFace, initialMousePos);
-                    isLeftMousePressed = true;
+                } else {
+                    if (!shiftPressed) {
+                        selectionManager.clearSelections();
+                        voxelWorld.clearSelections(extrusionManager);
+                    }
+                    selectionManager.startSelection(hitVoxel);
+                }
+            } else {
+                if (!shiftPressed) {
+                    selectionManager.clearSelections();
+                    voxelWorld.clearSelections(extrusionManager);
                 }
             }
         } else {
             glm::dvec2 currentMousePos = glm::dvec2(xpos, ypos);
-            extrusionManager.updateExtrusion(currentMousePos, voxelWorld);
+            if (glm::distance(initialMousePos, currentMousePos) > 1.0) { // Threshold to consider as drag
+                isDragging = true;
+                extrusionManager.updateExtrusion(currentMousePos, voxelWorld);
+            }
         }
     } else {
         if (isLeftMousePressed) {
-            extrusionManager.endExtrusion(voxelWorld);
+            if (!isDragging) {
+                // Handle a simple click
+                glm::vec3 rayOrigin = camera.position;
+                glm::vec3 rayDirection = getRayFromMouse(projection, view, xpos, ypos, windowWidth, windowHeight);
+                glm::ivec3 hitVoxel;
+                glm::vec3 hitNormal;
+                FaceDirection hitFace;
+
+                if (voxelWorld.raycast(rayOrigin, rayDirection, hitVoxel, hitNormal, hitFace)) {
+                    if (!shiftPressed) {
+                        selectionManager.clearSelections();
+                        voxelWorld.clearSelections(extrusionManager);
+                    }
+                    selectionManager.startSelection(hitVoxel);
+                } else {
+                    if (!shiftPressed) {
+                        selectionManager.clearSelections();
+                        voxelWorld.clearSelections(extrusionManager);
+                    }
+                }
+            } else {
+                extrusionManager.endExtrusion(voxelWorld);
+            }
+
             isLeftMousePressed = false;
+            isDragging = false;
         }
     }
 }
+
+
+
 
 
 
