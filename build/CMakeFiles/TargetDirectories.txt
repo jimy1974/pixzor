@@ -1,0 +1,5 @@
+C:/Users/james/Desktop/myVoxelEngine2/build/CMakeFiles/myVoxelEngine.dir
+C:/Users/james/Desktop/myVoxelEngine2/build/CMakeFiles/imgui.dir
+C:/Users/james/Desktop/myVoxelEngine2/build/CMakeFiles/stb_image.dir
+C:/Users/james/Desktop/myVoxelEngine2/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/james/Desktop/myVoxelEngine2/build/CMakeFiles/ZERO_CHECK.dir

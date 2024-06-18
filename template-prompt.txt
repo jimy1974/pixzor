@@ -1,0 +1,82 @@
+I've got a small voxel engine and editor I'm trying to build, which is able to render  textures that stretch across many voxels. So far, the program onnly shows a small numebr of voxels on the screen. You can rotate them around with the mouse or zoom in and out with the mouse wheel. It's also possible to Highlight the voxels with the mouse, though for some reason they are not being highlighted in yellow or orange, only red for now. When you click on the voxels the program either selects or deseelcts them and if you hold down the mouse button and drag on the surface of the voxels, it will select a range of voxels. Aditinalty, if you click in the sky, it deselects all the voxels. 
+
+------------------------------------------------
+
+CMakeLists.txt : 
+------------------------------------------------
+
+------------------------------------------------
+
+VoxelWorld.h :
+------------------------------------------------
+
+
+------------------------------------------------
+
+
+VoxelWorld.cpp : 
+------------------------------------------------
+
+------------------------------------------------
+
+main.cpp
+-----------------------------------------------
+
+--------------------------------------------------------
+
+Camera.h : 
+--------------------------------------------------------
+
+
+--------------------------------------------------------
+
+vertex_shader.glsl:
+--------------------------------------------------------
+
+
+--------------------------------------------------------
+
+
+fragment_shader.glsl : 
+--------------------------------------------------------
+
+------------------------------------------------
+
+SelectionManager.h:
+------------------------------------------------
+
+--------------------------------------------------------
+
+SelectionManager.cpp:
+------------------------------------------------
+
+------------------------------------------------
+
+glm_hash.h:
+------------------------------------------------
+
+------------------------------------------------
+
+Now at the moment, the voxles are forming just a small box with this code : 
+
+for (int x = -3; x <= 3; ++x) {
+    for (int y = -3; y <= 3; ++y) {
+        for (int z = -3; z <= 3; ++z) {
+                voxelWorld.setVoxel(x, y, z, 1, "blue", "default");
+        }
+     }
+}
+
+When I try to increase the size like this : 
+
+for (int x = -10; x <= 10; ++x) {
+    for (int y = -10; y <= 10; ++y) {
+        for (int z = -3; z <= 3; ++z) {
+                voxelWorld.setVoxel(x, y, z, 1, "blue", "default");
+        }
+     }
+}
+
+The edges of the voxles disappear, so I think that the code might be culling too many faces or something.
+
+I would like to get this part working, to have a platform to start working on the next section that will involve dragging with the mouse to extrude or add more voxels to the voxel setup. 

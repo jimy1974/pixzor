@@ -1,0 +1,78 @@
+Certainly! Let's break down the requirements and think through the design for implementing voxel extrusion and removal using mouse dragging. Here's a plan to address each of the points you mentioned.
+
+High-Level Design
+Record the Initial Mouse Click Position:
+
+Capture the initial position when the left mouse button is first pressed.
+Determine Mouse Movement Direction:
+
+Calculate the movement direction of the mouse in 2D screen space.
+Determine if the movement is in the same direction as the 3D raycast normal.
+Calculate Distance and Voxel Layers:
+
+Calculate the distance the mouse has moved from its initial position.
+Convert this distance to the number of voxel layers to add or remove.
+Dynamic Mesh Creation:
+
+Create a temporary, semi-transparent mesh to visualize the potential voxel changes.
+Only finalize the changes when the mouse button is released.
+Detailed Plan
+Step 1: Record the Initial Mouse Click Position
+Mouse Callback Function:
+Modify the mouse_callback function to store the initial mouse position (initialMousePos) when the left mouse button is first pressed.
+Store the initial voxel position and the face that was clicked.
+Step 2: Determine Mouse Movement Direction
+Mouse Movement Calculation:
+Continuously track the current mouse position while the left button is held down.
+Calculate the direction vector of the mouse movement in screen space.
+Compare this direction with the 2D projection of the 3D raycast normal to determine if it's moving inward or outward.
+Step 3: Calculate Distance and Voxel Layers
+Distance Calculation:
+Calculate the Euclidean distance between the initial mouse position and the current mouse position.
+Convert this distance into a number of voxel layers to add or remove.
+Step 4: Dynamic Mesh Creation
+Temporary Mesh:
+Use the ExtrusionManager to create a temporary mesh that visualizes the potential voxel changes.
+The mesh should be semi-transparent to indicate that it's a preview.
+Only apply the changes to the voxel world when the left mouse button is released.
+Implementation Strategy
+Data Structures and Methods
+VoxelWorld Class:
+
+Add methods to temporarily add or remove voxels and generate a preview mesh.
+ExtrusionManager Class:
+
+Manage the state of the extrusion, including the initial click position, direction, and distance.
+Generate the temporary mesh based on the mouse movement.
+Workflow
+Initial Mouse Click:
+
+Capture the initial mouse position and raycast normal.
+Initialize the ExtrusionManager with this information.
+Mouse Movement:
+
+Continuously update the current mouse position.
+Calculate the movement direction and distance.
+Determine the number of voxel layers to add or remove based on the movement.
+Temporary Mesh Update:
+
+Generate a temporary mesh to visualize the changes.
+Update this mesh dynamically as the mouse moves.
+Finalization:
+
+When the mouse button is released, apply the voxel changes to the VoxelWorld.
+Clear the temporary mesh.
+Potential Challenges and Solutions
+Performance:
+
+Generating a new mesh for every mouse movement can be slow. Optimize by only updating the necessary parts of the mesh.
+Use spatial partitioning (e.g., octrees) to manage and update only relevant sections of the voxel world.
+Precision:
+
+Ensure the mouse movement accurately maps to voxel layers. Consider snapping to voxel grid to avoid small, imprecise changes.
+User Feedback:
+
+Provide visual feedback through a semi-transparent preview mesh.
+Consider adding additional visual cues, such as grid lines or bounding boxes.
+Conclusion
+By structuring the implementation this way, we can handle complex voxel operations efficiently and intuitively. Using an ExtrusionManager to handle the state and a temporary mesh for visualization allows for a responsive and user-friendly interface. This approach also ensures that the voxel world isn't unnecessarily modified until the user confirms the changes by releasing the mouse button.

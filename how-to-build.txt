@@ -1,0 +1,11 @@
+CD build
+cmake ..
+
+msbuild VoxelTest.sln /p:Configuration=Debug
+
+msbuild VoxelWorld.sln /p:Configuration=Debug
+
+cd build
+cmake .. -A x64
+cmake --build . --config Debug
+
